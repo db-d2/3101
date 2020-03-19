@@ -1,0 +1,71 @@
+#!/usr/bin/env python
+
+# run as python script
+
+import sys
+import argparse
+from tqdm import tqdm
+import time
+
+parser = argparse.ArgumentParser()
+
+# required positional arg
+parser.add_argument("arg1", type=int,
+                    help="an int")
+
+# 2nd required positional arg
+parser.add_argument("arg2", type=str,
+                    help="a pathanme")
+
+# optional '-' flag with no arg
+parser.add_argument("-v", "--verbose", help="increase output verbosity",
+                    action="store_true")
+
+# optional '-' flag no arg
+parser.add_argument("-q", "--query", help="query for exit value",
+			 action='store_true')
+
+# optional '-' flag with required arg
+parser.add_argument("-l", "--loops", help="specify # of loops",
+			 type=int)
+
+# optional '-' flag with required arg
+parser.add_argument("-e", "--exit", help="specify exit value as arg",
+			 type=int)
+
+
+
+# parsed args - will automatically print errors and abort on bad args
+args = parser.parse_args()
+
+# if we got here, parse was happy
+
+print('arg1=', args.arg1)
+print('arg2=', args.arg2)
+
+# args.verbose will = None if no arg
+if args.verbose:
+    print("verbosity turned on")
+    print(sys.version)
+
+if args.loops:
+    for j in tqdm(range(args.loops)):
+        time.sleep(1)
+    
+
+# note exit val is one byte, 0-255
+# could check and complain if given
+# bogus value
+
+if args.exit:
+   print("exit with:", args.exit)
+   # in bash, print with:  echo $?
+   sys.exit(args.exit)
+   print("won't get here")
+
+if args.query:
+   # demand input from the user
+   es = input('specify exit value: ')
+   e = int(es)
+   sys.exit(e)
+

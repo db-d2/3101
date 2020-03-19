@@ -1,0 +1,36 @@
+#!/usr/bin/env python
+
+import time
+import click
+import sys
+from tqdm import tqdm
+
+@click.command()
+@click.argument('arg1')
+@click.argument('arg2')
+@click.option('--loops', default=0, help='Loop with progress bar')
+@click.option('--exit', default=0, help='Specifiy exit code')
+@click.option('--verbose', is_flag=True, help='Print sys info')
+@click.option('--query', is_flag=True, help='Prompt for exit code')
+
+
+def hello(arg1, arg2, exit=0, query=False, verbose=False, loops = 0):
+    """Simple script that plays with click."""
+    if verbose:
+        print(f'sys.version={sys.version}')
+        print(f'arg1={arg1}, arg2={arg2}')
+    if loops:
+        for j in tqdm(range(loops)):
+            time.sleep(1)
+    if exit:
+        sys.exit(exit)
+
+    if query:
+        # demand input from the user
+        es = input('specify exit value: ')
+        e = int(es)
+        sys.exit(e)
+        
+
+hello()
+

@@ -1,0 +1,38 @@
+#!/Users/lstead/opt/anaconda3/bin/python -i
+
+# Flask server example
+
+# hit flask server with curl    
+# curl -H foo:bar -H another:header -H and:another   -i http://127.0.0.1:7777/
+
+from flask import Flask, Response, request
+import os
+import re
+
+app = Flask('Flask')
+
+################ simple handlers
+
+@app.route('/')
+def hello():
+    return 'Hi There!'
+
+@app.route('/foo')
+def h1():
+    return 'foo handler'
+
+@app.route('/headers')
+def headers():
+    # headers to send back
+    # have to set content type to text/plain, otherwise
+    # browser will default to html and ignore new lines
+    headers = {'larry' : 'stead',
+               'teach' : 'python',
+               'Content-Type' : 'text/plain; charset=utf-8'}
+    return ('Headers sent by client:\n\n' + str(request.headers) ,200, headers)
+
+@app.route('/sub5/<int:num>/')
+def getnum(num):
+    return '<h1>{}-5 is <i>{}</i> '.format(num, num-5)
+
+app.run(port=7777)
