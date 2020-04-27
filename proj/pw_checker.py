@@ -7,6 +7,7 @@ import random
 import requests
 import hashlib
 import warnings
+# drops the use warning around the regex in repeats()
 warnings.filterwarnings("ignore", 'This pattern has match groups')
 
 class PasswordChecker:
@@ -25,16 +26,18 @@ class PasswordChecker:
                 self.df = pd.read_csv(kwargs['fname'])
             # User wants a new nist compliant password. Oblige them!
             if 'new' in kwargs:
-                wordlist = []
-                with open('datasets/english_10000.txt', 'r') as wstream:
-                    for word in wstream:
-                        wordlist.append(word)
-                for i in range(3):
-                    self.new_pass = self.new_pass + \
-                        random.choice(wordlist).rstrip('\n')
+                self.gen_pw()
 
     def get(self):
         return self.new_pass
+
+    def gen_pw(self):
+        wordlist = []
+        with open('datasets/english_10000.txt', 'r') as wstream:
+            for word in wstream:
+                wordlist.append(word)
+        for i in range(3):
+            self.new_pass = self.new_pass+random.choice(wordlist).rstrip('\n')
     
     # pass first 5 char of sha1 hash to pwnedpasswords return T/F
     def pwn_check(self, hashed):
@@ -57,8 +60,7 @@ class PasswordChecker:
 
         return self.pwn_check(hashObj.hexdigest().upper())
         
-    # Calculating the lengths to flag short password
-    # Technically the NIST standard is 8 but some systems
+    # Technically the NIST standard for length is 8 but some systems
     # still use lanman passwords which divide passwords less than 15 into
     # two 7 char hashes which are trivial to crack. Forcing 15 chars bypasses
     # any legacy lanman settings (like on many windows AD domains)
@@ -135,6 +137,9 @@ def pw_checker(check,pwd,gen):
             print('This password has been exposed!')
         else:
             print('Not is known hash database. Running additional checks')
+            pw_tocheck.do_checks()
+            print('Writing failed tests (if any) to ./failed_csv')
+            pw_tocheck.df.to_csv('failed_csv')
     if gen:
         newpw = PasswordChecker(new=True)
         print(f'Your NIST compliant password is:{newpw.get()}')
