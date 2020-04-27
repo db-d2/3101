@@ -36,7 +36,7 @@ class PasswordChecker:
         with open('datasets/english_10000.txt', 'r') as wstream:
             for word in wstream:
                 wordlist.append(word)
-        for i in range(3):
+        for i in range(4):
             self.new_pass = self.new_pass+random.choice(wordlist).rstrip('\n')
     
     # pass first 5 char of sha1 hash to pwnedpasswords return T/F
@@ -116,7 +116,7 @@ class PasswordChecker:
     help='Checks csv file containing passwords against NIST standards')
 @click.option('-p', '--pwd', default='', is_flag=False, \
     help='checks pwd against known lists to see if it has been exposed')
-@click.option('-g', '--gen', default='', is_flag=False, \
+@click.option('-g', '--gen', is_flag=True, \
     help='generates a new NIST compliant password')
 
 # pw_checker main
