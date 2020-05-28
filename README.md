@@ -1,2 +1,2 @@
 # COMS 3101
-Lectures Homeworks and Final project
+Lectures, homeworks, and final project
